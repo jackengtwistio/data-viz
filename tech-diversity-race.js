@@ -12,18 +12,18 @@ function TechDiversityRace() {
 
   // Preload the data. This function is called automatically by the
   // gallery when a visualisation is added.
-  this.preload = function() {
+  this.preload = function () {
     var self = this;
     this.data = loadTable(
       './data/tech-diversity/race-2018.csv', 'csv', 'header',
       // Callback function to set the value
       // this.loaded to true.
-      function(table) {
+      function (table) {
         self.loaded = true;
       });
   };
 
-  this.setup = function() {
+  this.setup = function () {
     if (!this.loaded) {
       console.log('Data not yet loaded');
       return;
@@ -41,14 +41,14 @@ function TechDiversityRace() {
     }
   };
 
-  this.destroy = function() {
+  this.destroy = function () {
     this.select.remove();
   };
 
   // Create a new pie chart object.
   this.pie = new PieChart(width / 2, height / 2, width * 0.4);
 
-  this.draw = function() {
+  this.draw = function () {
     if (!this.loaded) {
       console.log('Data not yet loaded');
       return;

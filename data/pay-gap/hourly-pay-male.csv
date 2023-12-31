@@ -1,0 +1,27 @@
+Description,Number of jobs (thousand),Median,change,Mean,change,10,20,25,30,40,60,70,75,80,90
+All employees,13257,13.81,2.7,17.54,3,7.88,9.05,9.72,10.41,12,16.04,18.89,20.67,22.92,30.6
+Corporate managers and directors,1461,23.75,4.7,29.46,4,10.82,13.91,15.38,16.98,20.07,28.11,33.43,36.73,41.22,54.86
+Other managers and proprietors,229,14.67,1.4,18.05,3.4,8.75,10,10.58,11.27,12.95,16.64,19.1,20.6,22.49,28.97
+"  Science, research, engineering and technology professionals",1038,21.09,2.3,22.56,2.4,12.95,15.33,16.38,17.42,19.2,23.08,25.55,26.88,28.72,33.54
+Health professionals,359,21.03,1.5,26.93,2.3,13.21,15.03,16,16.77,18.42,23.44,28.2,32.26,38.33,50.06
+Teaching and educational professionals,520,23.6,1.5,25.25,3,15.02,17.94,19.08,19.75,21.72,25.45,27.98,29.58,31.36,37.37
+"  Business, media and public service professionals",821,20.37,0.9,23.79,3.5,12.05,14.68,15.85,16.78,18.53,22.81,25.55,27.38,29.48,36.97
+"  Science, engineering and technology associate professionals",522,14.49,1.1,15.56,1.7,9.3,10.68,11.49,12.11,13.32,15.87,17.39,18.27,19.4,22.53
+Health and social care associate professionals,99,13.34,0.5,14.35,0.3,9.54,10.58,11.09,11.65,12.42,14.63,15.95,16.56,17.33,19.31
+Protective service occupations,298,18.29,5.7,18.01,3.9,12.53,14.12,14.86,15.58,17.08,19.17,20.06,20.62,21.33,22.77
+"  Culture, media and sports occupations",139,13.78,2.6,21.36,-6.5,9.08,10.22,10.88,11.5,12.67,15,16.79,17.88,19.37,x
+Business and public service associate professionals,1134,17.99,3.7,21.35,4.1,10.74,12.75,13.47,14.37,16.02,20.19,23.01,24.75,27.36,35.98
+Administrative occupations,713,11.81,2.7,13.64,3.7,8.05,9.1,9.52,9.9,10.72,13.05,14.61,15.59,16.84,21.59
+Secretarial and related occupations,58,9.23,2.2,11.27,6.4,7.45,7.69,7.99,8.15,8.6,10,11.04,11.84,12.27,x
+Skilled agricultural and related trades,99,9.51,0.1,10.27,1.9,7.5,8,8.3,8.63,9.07,10.01,10.65,11.07,11.66,12.85
+"  Skilled metal, electrical and electronic trades",977,13.76,2.3,14.5,2.1,9,10.5,11.13,11.66,12.75,14.78,16.02,16.77,17.63,20.68
+Skilled construction and building trades,305,12.51,2.7,13.23,3.4,8.61,10,10.45,11,11.75,13.4,14.4,15,15.62,17.78
+"  Textiles, printing and other skilled trades",335,9.25,3.6,10.38,4.6,7.5,7.7,8,8.25,8.72,9.96,10.87,11.48,12,14.12
+Caring personal service occupations,301,9.32,1.1,10.06,0.7,7.5,7.93,8.1,8.3,8.77,10,10.69,11.24,11.96,13.96
+"  Leisure, travel and related personal service occupations",167,9.81,1,11.86,3.7,7.5,8.01,8.36,8.49,9.05,10.65,11.78,12.41,13.36,16.99
+Sales occupations,578,8.48,4.3,9.86,5,7.28,7.5,7.62,7.7,8.05,8.97,9.71,10.18,10.85,13.54
+Customer service occupations,230,9.83,2.1,11.82,3.9,7.5,7.9,8.22,8.49,9.13,10.82,12.01,12.85,13.97,17.62
+"  Process, plant and machine operatives",591,10.6,-0.6,11.9,1.2,7.63,8.33,8.64,9,9.78,11.7,13,13.74,14.76,17.44
+Transport and mobile machine drivers and operatives,767,10.72,3.1,11.79,3.3,7.7,8.49,8.91,9.25,10,11.5,12.31,12.83,13.62,16.33
+Elementary trades and related occupations,260,9.24,3.5,10.05,4.1,7.5,7.75,7.97,8.17,8.65,9.9,10.75,11.17,11.81,13.69
+Elementary administration and service occupations,1258,8.58,4.5,9.78,4.6,7.06,7.5,7.51,7.69,8.11,9.24,10.07,10.59,11.05,12.93

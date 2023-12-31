@@ -1,3 +1,4 @@
+
 function TechDiversityGender() {
 
   // Name for the visualisation to appear in the menu bar.
@@ -18,7 +19,7 @@ function TechDiversityGender() {
     bottomMargin: height,
     pad: 5,
 
-    plotWidth: function() {
+    plotWidth: function () {
       return this.rightMargin - this.leftMargin;
     },
 
@@ -35,7 +36,7 @@ function TechDiversityGender() {
   this.midX = (this.layout.plotWidth() / 2) + this.layout.leftMargin;
 
   // Default visualisation colours.
-  this.femaleColour = color(255, 0 ,0);
+  this.femaleColour = color(255, 0, 0);
   this.maleColour = color(0, 255, 0);
 
   // Property to represent whether data has been loaded.
@@ -43,27 +44,27 @@ function TechDiversityGender() {
 
   // Preload the data. This function is called automatically by the
   // gallery when a visualisation is added.
-  this.preload = function() {
+  this.preload = function () {
     var self = this;
     this.data = loadTable(
       './data/tech-diversity/gender-2018.csv', 'csv', 'header',
       // Callback function to set the value
       // this.loaded to true.
-      function(table) {
+      function (table) {
         self.loaded = true;
       });
 
   };
 
-  this.setup = function() {
+  this.setup = function () {
     // Font defaults.
     textSize(16);
   };
 
-  this.destroy = function() {
+  this.destroy = function () {
   };
 
-  this.draw = function() {
+  this.draw = function () {
     if (!this.loaded) {
       console.log('Data not yet loaded');
       return;
@@ -73,7 +74,7 @@ function TechDiversityGender() {
     this.drawCategoryLabels();
 
     var lineHeight = (height - this.layout.topMargin) /
-        this.data.getRowCount();
+      this.data.getRowCount();
 
     for (var i = 0; i < this.data.getRowCount(); i++) {
 
@@ -93,56 +94,56 @@ function TechDiversityGender() {
       noStroke();
       textAlign('right', 'top');
       text(company.name,
-           this.layout.leftMargin - this.layout.pad,
-           lineY);
+        this.layout.leftMargin - this.layout.pad,
+        lineY);
 
       // Draw female employees rectangle.
       fill(this.femaleColour);
       rect(this.layout.leftMargin,
-           lineY,
-           this.mapPercentToWidth(company.female),
-           lineHeight - this.layout.pad);
+        lineY,
+        this.mapPercentToWidth(company.female),
+        lineHeight - this.layout.pad);
 
       // Draw male employees rectangle.
       fill(this.maleColour);
       rect(this.layout.leftMargin + this.mapPercentToWidth(company.female),
-           lineY,
-           this.mapPercentToWidth(company.male),
-           lineHeight - this.layout.pad);
+        lineY,
+        this.mapPercentToWidth(company.male),
+        lineHeight - this.layout.pad);
     }
 
     // Draw 50% line
     stroke(150);
     strokeWeight(1);
     line(this.midX,
-         this.layout.topMargin,
-         this.midX,
-         this.layout.bottomMargin);
+      this.layout.topMargin,
+      this.midX,
+      this.layout.bottomMargin);
 
   };
 
-  this.drawCategoryLabels = function() {
+  this.drawCategoryLabels = function () {
     fill(0);
     noStroke();
     textAlign('left', 'top');
     text('Female',
-         this.layout.leftMargin,
-         this.layout.pad);
+      this.layout.leftMargin,
+      this.layout.pad);
     textAlign('center', 'top');
     text('50%',
-         this.midX,
-         this.layout.pad);
+      this.midX,
+      this.layout.pad);
     textAlign('right', 'top');
     text('Male',
-         this.layout.rightMargin,
-         this.layout.pad);
+      this.layout.rightMargin,
+      this.layout.pad);
   };
 
-  this.mapPercentToWidth = function(percent) {
+  this.mapPercentToWidth = function (percent) {
     return map(percent,
-               0,
-               100,
-               0,
-               this.layout.plotWidth());
+      0,
+      100,
+      0,
+      this.layout.plotWidth());
   };
 }
