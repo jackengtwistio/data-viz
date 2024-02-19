@@ -1,4 +1,4 @@
-var mockData = `Year,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
+var mockData = `Mock Data,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
 1907,-0.41,-0.51,-0.27,-0.38,-0.46,-0.43,-0.36,-0.34,-0.32,-0.23,-0.47,-0.47
 1908,-0.43,-0.3,-0.53,-0.45,-0.4,-0.4,-0.39,-0.46,-0.35,-0.44,-0.49,-0.48
 1909,-0.68,-0.46,-0.5,-0.59,-0.55,-0.52,-0.94,-0.3,-0.34,-0.36,-0.3,-0.54
@@ -7,8 +7,7 @@ var mockData = `Year,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
 1912,-0.25,-0.11,-0.34,-0.19,-0.21,-0.25,0.43,-0.54,-0.51,-0.56,-0.37,-0.42
 1913,-0.41,-0.42,-0.42,-0.39,-0.46,-0.48,-0.36,-0.33,-0.35,-0.33,-0.18,-0.02
 1914,0.05,-0.1,-0.21,-0.28,-0.22,-0.26,-0.24,-0.13,-0.12,-0.03,-0.17,-0.07
-1915,-0.16,0,-0.08,0.07,-0.06,-0.2,-0.09,0.19,-0.16,-0.24,-0.11,-0.15
-1916,-0.08,-0.12,-0.27,-0.29,-0.31,-0.45,-0.35,-0.24,-0.31,-0.26,-0.39,-0.79`
+1915,-0.16,0,-0.08,0.07,-0.06,-0.2,-0.09,0.19,-0.16,-0.24,-0.11,-0.15`
 
 function UserLineChart() {
     this.name = 'your line chart';
@@ -18,7 +17,6 @@ function UserLineChart() {
     this.loaded = false;
     this.minY = Infinity;
     this.maxY = -Infinity;
-    // this.selectedRow = null;
     this.data = null
     this.badInput = false
 
@@ -55,34 +53,41 @@ function UserLineChart() {
         if (!this.loaded) {
             return;
         }
+        // create input box for user to input data
         this.userInput = createElement('textarea');
         this.userInput.value(mockData);
         this.userInput.size(min(1500, window.innerWidth), 500);
         this.userInput.position(100, 1000);
-        console.log('this.userInput', this.userInput)
-        // create input box for user to input data
-        this.userFile = createFileInput(function (file) {
-            if (file.type === 'text') {
-                // mimic p5js loadTable function, but with a string (file.data) instead of file
-                self.data = self.StringToTable(file.data);
-                self.userInput.value(file.data);
-                self.loaded = true;
-            } else {
-                console.error('Not a text file.');
-            }
-        })
-        this.userFile.position(200, 10);
         // Create a button for sending userInput value to self.data
-        let sendButton = createButton('Send Data');
+        var sendButton = createButton('Send Data');
         sendButton.position(100, 950); // Position above the textarea for visibility
         sendButton.mousePressed(function () {
-            // Assuming StringToTable is a function that converts string to your desired format
             self.data = self.StringToTable(self.userInput.value());
-            console.log("Data sent:", self.data);
             // Re-initialize or update the chart with the new data
             self.initializeChart();
         });
-        // this.userFile.position(200, 10);
+        var pInstruction = createP('Text from your uploaded file will appear in the text box below. You can edit the data directly in the text box. By clicking the button on the left, the graph will be updated with the edited data. However, if your data does not follow the format of the mock data, the graph may not work as expected.')
+        pInstruction.position(250, 870);
+        pInstruction.style('max-width', '700px');
+
+
+
+        // create file input for user to upload a file
+        this.userFile = createFileInput(function (file) {
+            if (file.type === 'text') {
+                self.data = self.StringToTable(file.data);
+                // update the textarea with the new data from uploaded file
+                self.userInput.value(file.data);
+                self.data = self.StringToTable(self.userInput.value());
+                // Re-initialize or update the chart with the new data
+                self.initializeChart();
+                self.loaded = true;
+            } else {
+                this.badInput = true;
+                console.error('Not a text file.');
+            }
+        })
+        this.userFile.position(400, 10);
         self.initializeChart();
     }
 
@@ -98,6 +103,12 @@ function UserLineChart() {
     this.draw = function () {
         if (!this.loaded) {
             return;
+        }
+        if (this.badInput) {
+            var pWarning = createP();
+            pWarning.html('Invalid input. Please make sure your data follows the format of the mock data.')
+            pWarning.style('color', 'red');
+            pWarning.position(500, 30);
         }
         // get the year select1ed by user, default to the first and last year in the data
         this.drawTwoLines();
@@ -170,11 +181,13 @@ function UserLineChart() {
         this.columns = this.data.columns.slice(1);
 
         for (var i = 1; i <= this.columns.length; i++) {
-            console.log('this.data.getColumn(this.data.columns[i])', this.data.getColumn(this.data.columns[i]))
             var currentMin = min(this.data.getColumn(this.data.columns[i]))
             var currentMax = max(this.data.getColumn(this.data.columns[i]))
-            this.minY = min(currentMin, this.minY)
-            this.maxY = max(currentMax, this.maxY)
+            //Min and max always choose NaN over numbers so we need to check for that if currentMin and currentMax are valid numbers
+            if (currentMax >= -Infinity && currentMin >= -Infinity) {
+                this.minY = min(currentMin, this.minY)
+                this.maxY = max(currentMax, this.maxY)
+            }
         }
         this.firstColumn = this.data.getColumn(0)
         // remove the previous select1 and select2 element if they exist to avoid creating multiple elements
@@ -198,6 +211,7 @@ function UserLineChart() {
 
     //mimick p5js loadTable function and return a table object with all the properties and methods needed in this program
     this.StringToTable = function (inputString) {
+        var self = this;
         // Split the input string by newline to get rows and initialize tableOje
         var stringRows = inputString.trim().split('\n').map(function (item) { return item.trim(); });
         var rows = stringRows.slice(1).map(function (row) {
@@ -217,6 +231,7 @@ function UserLineChart() {
                 } else if (typeof col === 'number') {
                     var colNum = col;
                 } else {
+                    self.badInput = true;
                     console.error('Column name or index not found');
                     return "";
                 }
@@ -232,12 +247,13 @@ function UserLineChart() {
                 } else if (typeof col === 'number') {
                     var colNum = col;
                 } else {
+                    self.badInput = true;
                     console.error('Column name or index not found');
                     return "";
                 }
                 if (rowNum < 0 || rowNum >= this.rows.length || colNum === -1 || !this.rows[rowNum][colNum]) {
+                    self.badInput = true;
                     console.error("Row or column not found");
-
                     return "";
                 }
                 return this.rows[rowNum][colNum].toString();
