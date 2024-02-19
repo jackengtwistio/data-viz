@@ -1,5 +1,5 @@
-function ClimateChangeMonthly() {
-    this.name = 'Climate Change Monthly';
+function LineChartClimate() {
+    this.name = 'Climate Change Monthly (line chart)';
     this.id = 'climate-change-monthly';
     // label x y axes, but an empty label for y is enough
     this.xAxisLabel = 'month';
@@ -57,6 +57,8 @@ function ClimateChangeMonthly() {
         this.minYear = this.data.getString(0, 'Year');
         this.maxYear = this.data.getNum(this.data.getRowCount() - 1, 'Year');
         this.months = this.data.columns.slice(1);
+        console.log('columns', this.data.columns);
+        console.log('rows', this.data);
         for (var i = 0; i < this.months.length; i++) {
             this.minTemperature = min(min(this.data.getColumn(this.months[i])), this.minTemperature);
             this.maxTemperature = max(max(this.data.getColumn(this.months[i])), this.maxTemperature);

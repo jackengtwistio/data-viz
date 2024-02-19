@@ -1,7 +1,7 @@
 function Gallery() {
 
   this.visuals = [];
-  this.selectedVisual = null;
+  this.selectedVisual = this.visuals[-1];
   var self = this;
 
 
@@ -75,10 +75,8 @@ function Gallery() {
 
     if (visIndex != null) {
       // If the current visualisation has a deselect method run it.
-      console.log('not null')
       if (this.selectedVisual != null
         && this.selectedVisual.hasOwnProperty('destroy')) {
-        console.log('destroy')
         this.selectedVisual.destroy();
       }
       // Select the visualisation in the gallery.
@@ -86,7 +84,6 @@ function Gallery() {
 
       // Initialise visualisation if necessary.
       if (this.selectedVisual.hasOwnProperty('setup')) {
-        console.log('setup')
         this.selectedVisual.setup();
       }
 

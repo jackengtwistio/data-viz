@@ -20,9 +20,9 @@ function setup() {
   gallery.addVisual(new MeanPayByJobNumber());
   gallery.addVisual(new PayGapByJobNumber())
   gallery.addVisual(new ClimateChange());
-  gallery.addVisual(new ClimateChangeMonthly());
-  gallery.addVisual(new Test());
-  gallery.addVisual(new Sound());
+  gallery.addVisual(new LineChartClimate());
+  gallery.addVisual(new BarChartClimate());
+  gallery.addVisual(new UserLineChart());
 }
 
 function draw() {

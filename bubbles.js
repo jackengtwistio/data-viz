@@ -179,7 +179,7 @@ function Bubble(_name, _data, _layout) {
     this.mouseOvering = false;
     this.textLength = textWidth(this.displayedName);
     this.direction = createVector(0, 0);
-    this.pos = createVector(random(this.layout.leftMargin + this.textLength), random(this.layout.topMargin + this.textLength))
+    this.pos = createVector(200, 200)
 
     this.draw = function () {
         push();
@@ -205,8 +205,6 @@ function Bubble(_name, _data, _layout) {
             stroke(255)
             strokeWeight(2);
             textAlign(CENTER, CENTER);
-            console.log(this.data)
-            console.log(this.name)
             text(this.displayedName, this.layout.leftMargin + 20 + this.textLength / 2, this.layout.topMargin + 13);
         } else {
             this.displayedName = ''
