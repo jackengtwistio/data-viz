@@ -1,4 +1,26 @@
 var bubbles = [];
+var mouseDragging = false
+var OneBubbleDragging = false
+function mouseDragged() {
+    console.log('dragging')
+    mouseDragging = true
+}
+function touchMoved() {
+    console.log('touch')
+    mouseDragging = true
+}
+function mouseReleased() {
+    console.log('released')
+    OneBubbleDragging = false
+    mouseDragging = false
+}
+function mousePressed() {
+    console.log('pressed')
+    // OneBubbleDragging = !OneBubbleDragging
+    // mouseDragged = !mouseDragged
+}
+
+
 
 function MeanPayByJobNumber() {
     this.name = 'Mean Salary by Job Population';
@@ -145,7 +167,6 @@ function PayGapByJobNumber() {
         // find the min and max of jobNums for bubble size
         let minJobNum = min(jobNums)
         let maxJobNum = max(jobNums)
-
         for (var i = 0; i < jobs.length; i++) {
             bubbles.push(new Bubble(jobs[i], payGap[jobs[i]], this.layout));
             bubbles[i].setSize(jobNums[i], minJobNum, maxJobNum);
@@ -176,10 +197,10 @@ function Bubble(_name, _data, _layout) {
     this.red = 0
     this.blue = 0
     this.displayedName = _name;
-    this.mouseOvering = false;
     this.textLength = textWidth(this.displayedName);
     this.direction = createVector(0, 0);
     this.pos = createVector(200, 200)
+    this.draggedOne = false
 
     this.draw = function () {
         push();
@@ -187,10 +208,25 @@ function Bubble(_name, _data, _layout) {
         noStroke();
         fill(this.red, 0, this.blue);
         ellipse(this.pos.x, this.pos.y, this.size);
-        // \\\\\\
+        pop();
         let d = dist(mouseX, mouseY, this.pos.x, this.pos.y);
         if (d < this.size / 2) {
             this.mouseOvering = true;
+            // detect if no other bubble is being dragged
+            if (mouseDragging && !OneBubbleDragging) {
+                this.draggedOne = true
+                OneBubbleDragging = true
+            }
+            // update this bubble pos if it is being dragged
+            if (mouseDragging && this.draggedOne && OneBubbleDragging) {
+                this.pos.x = mouseX
+                this.pos.y = mouseY
+            }
+            // when mouse is released, update the draggedOne and OneBubbleDragging
+            if (!mouseDragging && this.draggedOne) {
+                this.draggedOne = false
+                OneBubbleDragging = false
+            }
         } else {
             this.mouseOvering = false;
         }
@@ -212,6 +248,10 @@ function Bubble(_name, _data, _layout) {
     }
 
     this.update = function (_bubbles) {
+        // bubble remain still when mouse is dragging for easy size comparison between bubbles
+        if (mouseDragging) {
+            return
+        }
         this.direction.set(0, 0);
         // move away from other bubbles
         for (var i = 0; i < _bubbles.length; i++) {
@@ -256,8 +296,9 @@ function Bubble(_name, _data, _layout) {
 
     }
 
+
     this.setSize = function (value, min, max) {
-        this.target_size = map(value, min, max, 5, 200)
+        this.target_size = map(value, min, max, 20, 200)
     }
     this.setColor = function (value, min, max) {
         this.blue = map(value, min, max, 0, 255)
