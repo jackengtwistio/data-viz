@@ -149,7 +149,7 @@ function BarChartClimate() {
         return map(temp, this.minTemperature, this.maxTemperature, bottomMargin, topMargin);
     }
     this.createSecretButton = function () {
-        this.secretButton = createA('/3d.html', 'secret world entry', '_blank');
+        this.secretButton = createA('3d.html', 'secret world entry', '_blank');
         this.secretButton.position(1220, 20);
         this.secretButton.class("mysterious-button")
         secretButtonExists = true
