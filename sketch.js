@@ -17,9 +17,9 @@ function setup() {
   gallery.addVisual(new TechDiversityGender());
   gallery.addVisual(new PayGapByJob2017());
   gallery.addVisual(new PayGapTimeSeries());
+  gallery.addVisual(new ClimateChange());
   gallery.addVisual(new MeanPayByJobNumber());
   gallery.addVisual(new PayGapByJobNumber())
-  gallery.addVisual(new ClimateChange());
   gallery.addVisual(new LineChartClimate());
   gallery.addVisual(new BarChartClimate());
   gallery.addVisual(new UserLineChart());
@@ -29,5 +29,13 @@ function draw() {
   background(255);
   if (gallery.selectedVisual != null) {
     gallery.selectedVisual.draw();
+  } else {
+    push()
+    textSize(32);
+    fill(255);
+    stroke(0);
+    strokeWeight(4);
+    text('Select a visualization on the left menu', 50, 50);
+    pop()
   }
 }

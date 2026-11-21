@@ -53,3 +53,14 @@ a {
         border-color: #888888;
     }
 }
+
+/* to distinguish which items in the menu have extended function */
+.new::before {
+    content: "new   ";
+    color: #007BFF; 
+    font-weight: bold; 
+    font-style: italic; /
+}
+.new{
+    border: 2px solid rgb(28, 28, 206);
+}

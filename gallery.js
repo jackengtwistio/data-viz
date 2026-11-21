@@ -25,6 +25,9 @@ function Gallery() {
     var menuItem = createElement('li', vis.name);
     menuItem.addClass('menu-item');
     menuItem.id(vis.id);
+    if (vis.new) {
+      menuItem.addClass('new');
+    }
 
     menuItem.mouseOver(function (e) {
       var el = select('#' + e.srcElement.id);

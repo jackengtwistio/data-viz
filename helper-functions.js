@@ -130,9 +130,43 @@ function drawXAxisTickLabel(value, layout, mapFunction) {
   }
 }
 
-// \\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+// detect mouse dragging
+var mouseDragging = false
+var OneBubbleDragging = false
+// p5 functions to detect mouse dragging
+function mouseDragged() {
+  mouseDragging = true
+}
+function touchMoved() {
+  mouseDragging = true
+}
+function mouseReleased() {
+  OneBubbleDragging = false
+  mouseDragging = false
+}
+
 
 function numInRange(Rangemax, Rangemin, currentNum, MaxNum, MinNum) {
   var num = map(currentNum, MinNum, MaxNum, Rangemin, Rangemax);
   return num;
 }
+
+// create sliders for size and color 
+function createSizeColorSliders(e, min, max) {
+  // user can choose the size difference of thethis.bubbles
+  e.sizeSlider = createSlider(0, 10, 0);
+  e.sizeSlider.position(400, 40);
+  e.greenColorSlider = createSlider(0, 255, 0);
+  e.greenColorSlider.position(400, 90);
+  e.bubbleSizeSliderValue = e.sizeSlider.value();
+  e.greenColorSliderValue = e.greenColorSlider.value();
+
+  // label the sliders
+  e.sizeSliderExplainDiv = createDiv('adjust the size differences of thethis.bubbles');
+  e.sizeSliderExplainDiv.position(550, 40);
+  e.colorExplainDiv = createDiv(`${min} (min) to  ${max} (max)`);
+  e.colorExplainDiv.position(550, 90);
+  e.colorExplainDiv.style('color', 'white');
+}
+

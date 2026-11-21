@@ -1,6 +1,7 @@
 function BarChartClimate() {
     this.name = 'Climate Change Monthly (bar chart)';
     this.id = 'bar-chart-climate';
+    this.new = true;
     this.xAxisLabel = 'month';
     this.yAxisLabel = '%'
     this.data;
@@ -51,6 +52,9 @@ function BarChartClimate() {
     this.destroy = function () {
         this.yearIndexSlider.remove();
         this.animButton.remove()
+        if (secretButtonExists) {
+            this.secretButton.remove()
+        }
     }
 
     this.setup = function () {

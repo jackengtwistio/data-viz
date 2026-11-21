@@ -10,8 +10,9 @@ var mockData = `Mock Data,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec
 1915,-0.16,0,-0.08,0.07,-0.06,-0.2,-0.09,0.19,-0.16,-0.24,-0.11,-0.15`
 
 function UserLineChart() {
-    this.name = 'your line chart';
+    this.name = 'Your Line Chart';
     this.id = 'user-line-chart';
+    this.new = true;
     this.xAxisLabel = 'X-axis';
     this.yAxisLabel = 'y-axis'
     this.loaded = false;
@@ -44,7 +45,6 @@ function UserLineChart() {
     this.preload = function () {
         var self = this;
         self.data = this.StringToTable(mockData);
-
         self.loaded = true;
     };
 
@@ -53,24 +53,37 @@ function UserLineChart() {
         if (!this.loaded) {
             return;
         }
+
         // create input box for user to input data
         this.userInput = createElement('textarea');
         this.userInput.value(mockData);
         this.userInput.size(min(1500, window.innerWidth), 500);
         this.userInput.position(100, 1000);
+
+        this.pInstruction = createP('Text from your uploaded file will appear in the text box below.' +
+            ' You can edit the data directly in the text box.' +
+            ' By clicking the button on the left, the graph will be updated with the edited data.' +
+            ' However, if your data does not follow the format of the mock data, the graph may not work as expected.')
+        this.pInstruction.position(250, 870);
+        this.pInstruction.style('max-width', '700px');
+        this.pWarning = createP();
+
+        // create a link for user to download a mock file
+        this.downloadLink = createA('./data/surface-temperature/mock-data.csv', ' download a mock file ');
+        this.downloadLink.attribute('download', '');
+        this.downloadLink.style('color', '#ffffff');
+        this.downloadLink.style('background-color', '#007bff');
+        this.downloadLink.style('border-radius', '2px');
+        this.downloadLink.position(800, 10);
+
         // Create a button for sending userInput value to self.data
-        var sendButton = createButton('Send Data');
-        sendButton.position(100, 950); // Position above the textarea for visibility
-        sendButton.mousePressed(function () {
+        this.sendButton = createButton('Send Data');
+        this.sendButton.position(100, 950); // Position above the textarea for visibility
+        this.sendButton.mousePressed(function () {
             self.data = self.StringToTable(self.userInput.value());
             // Re-initialize or update the chart with the new data
             self.initializeChart();
         });
-        var pInstruction = createP('Text from your uploaded file will appear in the text box below. You can edit the data directly in the text box. By clicking the button on the left, the graph will be updated with the edited data. However, if your data does not follow the format of the mock data, the graph may not work as expected.')
-        pInstruction.position(250, 870);
-        pInstruction.style('max-width', '700px');
-
-
 
         // create file input for user to upload a file
         this.userFile = createFileInput(function (file) {
@@ -83,38 +96,42 @@ function UserLineChart() {
                 self.initializeChart();
                 self.loaded = true;
             } else {
-                this.badInput = true;
+                this.warnBadInput('Not a text file.')
                 console.error('Not a text file.');
             }
         })
         this.userFile.position(400, 10);
+
+
         self.initializeChart();
     }
 
     this.destroy = function () {
         if (!this.loaded) {
-            // make sure this.select1 and this.select2 are created before removing them
+            // mak sure this.select1 and this.select2 are created before removing them
             return;
         }
         this.select1.remove();
         this.select2.remove();
+        this.userInput.remove();
+        this.userFile.remove();
+        this.sendButton.remove();
+        this.pInstruction.remove();
+        this.downloadLink.remove();
+        this.pWarning.remove();
     };
 
     this.draw = function () {
         if (!this.loaded) {
             return;
         }
-        if (this.badInput) {
-            var pWarning = createP();
-            pWarning.html('Invalid input. Please make sure your data follows the format of the mock data.')
-            pWarning.style('color', 'red');
-            pWarning.position(500, 30);
-        }
+
         // get the year select1ed by user, default to the first and last year in the data
         this.drawTwoLines();
         this.drawAxisLabels()
     }
 
+    // except drawXAxisTickLabel is called in this.drawTwoLines
     this.drawAxisLabels = function () {
         this.maxYpointsToHeight = function (y) {
             return map(y, this.minY, this.maxY, this.layout.bottomMargin, this.layout.topMargin);
@@ -136,13 +153,12 @@ function UserLineChart() {
         var previousPoint1 = null;
         var previousPoint2 = null;
 
-        // Assuming 'this.columns' starts from index 1 to skip the 'Year' column
+        // this.columns starts from index 1 to skip the 'Year' column
         for (var i = 0; i < this.columns.length; i++) {
             var columnName = this.columns[i];
             var x = map(i, 0, this.columns.length - 1, this.layout.leftMargin, this.layout.rightMargin);
             var value1 = parseFloat(this.data.getString(row1, columnName));
             var y1 = map(value1, this.minY, this.maxY, this.layout.bottomMargin, this.layout.topMargin);
-
             var value2 = parseFloat(this.data.getString(row2, columnName));
             var y2 = map(value2, this.minY, this.maxY, this.layout.bottomMargin, this.layout.topMargin);
 
@@ -169,7 +185,6 @@ function UserLineChart() {
             previousPoint1 = { x: x, y: y1 };
             previousPoint2 = { x: x, y: y2 };
 
-            // update the select1 element position
             this.select1.position(1530, previousPoint1.y - 10);
             this.select2.position(1530, previousPoint2.y - 10);
         }
@@ -179,6 +194,10 @@ function UserLineChart() {
         this.firstElemFirstCol = this.data.getString(0, 0);
         this.lastElemFirstCol = this.data.getString(this.data.getRowCount() - 1, 0);
         this.columns = this.data.columns.slice(1);
+        this.minY = Infinity;
+        this.maxY = -Infinity;
+        // reset the warning message
+        this.pWarning.html('');
 
         for (var i = 1; i <= this.columns.length; i++) {
             var currentMin = min(this.data.getColumn(this.data.columns[i]))
@@ -189,13 +208,13 @@ function UserLineChart() {
                 this.maxY = max(currentMax, this.maxY)
             }
         }
-        this.firstColumn = this.data.getColumn(0)
         // remove the previous select1 and select2 element if they exist to avoid creating multiple elements
         if (this.select1) { this.select1.remove(); }
         if (this.select2) { this.select2.remove(); }
         // create two DOM elements for user to select1 the year and compare the two line generated.
         this.select1 = createSelect();
         this.select2 = createSelect();
+        this.firstColumn = this.data.getColumn(0)
         for (var i = 0; i < this.firstColumn.length; i++) {
             this.select1.option(this.firstColumn[i]);
             this.select2.option(this.firstColumn[i]);
@@ -212,6 +231,7 @@ function UserLineChart() {
     //mimick p5js loadTable function and return a table object with all the properties and methods needed in this program
     this.StringToTable = function (inputString) {
         var self = this;
+
         // Split the input string by newline to get rows and initialize tableOje
         var stringRows = inputString.trim().split('\n').map(function (item) { return item.trim(); });
         var rows = stringRows.slice(1).map(function (row) {
@@ -219,7 +239,6 @@ function UserLineChart() {
                 return item.trim();
             });
         })
-        console.log('rows', rows)
         var columns = stringRows[0].split(',').map(function (item) { return item.trim(); });
         // mimic p5js table object
         var tableOje = {
@@ -231,12 +250,14 @@ function UserLineChart() {
                 } else if (typeof col === 'number') {
                     var colNum = col;
                 } else {
-                    self.badInput = true;
+                    self.warnBadInput('Invalid input. Please make sure your data follows the format of the mock data.')
                     console.error('Column name or index not found');
                     return "";
                 }
                 return this.rows.map(function (row, i) {
-
+                    if (row[colNum] === undefined) {
+                        self.warnBadInput(`Row ${i} column ${col} is undefined. Please make sure your data follows the format of the mock data.`)
+                    }
                     return row[colNum];
                 })
             },
@@ -247,13 +268,13 @@ function UserLineChart() {
                 } else if (typeof col === 'number') {
                     var colNum = col;
                 } else {
-                    self.badInput = true;
+                    self.warnBadInput()
                     console.error('Column name or index not found');
                     return "";
                 }
                 if (rowNum < 0 || rowNum >= this.rows.length || colNum === -1 || !this.rows[rowNum][colNum]) {
-                    self.badInput = true;
-                    console.error("Row or column not found");
+                    self.warnBadInput()
+                    console.error('Row index or column index not found');
                     return "";
                 }
                 return this.rows[rowNum][colNum].toString();
@@ -265,5 +286,11 @@ function UserLineChart() {
         };
 
         return tableOje;
+    }
+
+    this.warnBadInput = function (message) {
+        this.pWarning.html(message || 'Invalid input. Please make sure your data follows the format of the mock data. ')
+        this.pWarning.style('color', 'red');
+        this.pWarning.position(500, 30);
     }
 }
